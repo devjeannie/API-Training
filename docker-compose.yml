@@ -1,0 +1,31 @@
+version: '3.8'
+networks:
+  backend:
+    name: "${COMPOSE_PROJECT_NAME}.${APP_ENV}_network"
+services:
+  web:
+    build: ./docker/apache
+    container_name: ${COMPOSE_PROJECT_NAME}.${APP_ENV}..apache
+    ports:
+      - 8082:80
+    privileged: true
+    volumes:
+      - ./:/var/www/html
+  mysql:
+    container_name: "${COMPOSE_PROJECT_NAME}.${APP_ENV}.mysql"
+    image: "mysql:5.7"
+    platform: linux/amd64
+    environment:
+      MYSQL_ROOT_PASSWORD: "mysql"
+      MYSQL_USER: "default"
+      MYSQL_PASSWORD: "secret"
+      MYSQL_DATABASE: "laravel_db"
+      TZ: "Asia/Tokyo"
+    ports:
+      - 3308:3306
+    networks:
+      - backend
+
+volumes:
+  redis_volume:
+    driver: local
