@@ -2,64 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Car;
-use Illuminate\Http\Request;
+use App\Http\Requests\CreateCarRequest;
+use App\Http\Requests\UpdateCarRequest;
+use App\Services\CarService;
 
 class CarController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $carService;
+
+    public function __construct(CarService $carService)
+    {
+        $this->carService = $carService;
+    }
+
     public function index()
     {
-        //
+        $this->carService->getCarsOwnedByUser();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(CreateCarRequest $request)
     {
-        //
+        $this->carService->createCar($request->data());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function show($id)
     {
-        //
+        $this->carService->getCarById($id);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Car $car)
+    public function update(UpdateCarRequest $request, $car)
     {
-        //
+        $this->carService->updateCar($car, $request->data());
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Car $car)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Car $car)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Car $car)
-    {
-        //
+        $this->carService->deleteCar($id);
     }
 }
