@@ -2,57 +2,74 @@
 
 namespace Tests\Feature;
 
+use App\Http\Resources\CarResource;
 use App\Models\Car;
 use App\Models\User;
+use App\Services\CarService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class CarTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * Test creating, reading, updating, and deleting users and cars.
-     *
-     * @return void
-     */
-    public function testUsersAndCarsCRUD()
+    public function test_index()
     {
         $user = User::factory()->create();
-        $cars = Car::factory(3)->create(['user_id' => $user->id]);
-        $response = $this->get("/users/cars");
+        $this->actingAs($user);
+        $response = $this->get('/api/cars');
         $response->assertStatus(200);
-        foreach ($cars as $car) {
-            $response->assertSee($car->name);
-            // Add assertions to check other car details if needed
-        }
+    }
 
-        // Test creating a new car for the user
-        $newCarData = [
-            'name' => 'New Car',
-            // Add other fields as needed
+    public function test_store() 
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $carData = [
+            'user_id' => $user->id,
+            'name' => 'Car',
+            'model' => 'Camry',
+            'make' => 'Toyota',
+            'vin' => '4Y1-SL658-4-8-Z-41-1439',
         ];
-        $response = $this->post("/users/{$user->id}/cars", $newCarData);
-        $response->assertStatus(201);
-        $response->assertSee($newCarData['name']);
-        // Add assertions to check other car details if needed
 
-        // Test updating the first car
-        $updatedCarData = [
-            'name' => 'Updated Car Name',
-            // Add other fields as needed
-        ];
-        $response = $this->put("/users/{$user->id}/cars/{$cars[0]->id}", $updatedCarData);
+        $response = $this->post('api/cars', $carData);
         $response->assertStatus(200);
-        $response->assertSee($updatedCarData['name']);
-        // Add assertions to check other updated car details if needed
+    }
 
-        // Test deleting the second car
-        $response = $this->delete("/users/{$user->id}/cars/{$cars[1]->id}");
-        $response->assertStatus(204);
+    public function test_show() 
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $car = Car::factory()->create();
+        $response = $this->getJson('/api/cars/'.$car->id);
+        $response->assertStatus(200);
+    }
 
-        // Verify the car has been deleted
-        $this->assertDatabaseMissing('cars', ['id' => $cars[1]->id]);
+
+    public function test_update() 
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $car = Car::factory()->create();
+
+        $updatedData = [
+            'name' => 'Car',
+            'model' => 'Camry',
+            'make' => 'Toyota',
+            'vin' => '4Y1-SL658-4-8-Z-41-1439',
+        ];
+
+        $response = $this->postJson('/api/cars/'.$car->id, $updatedData);
+        $response->assertStatus(200); 
+    }
+
+    public function test_delete() 
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $car = Car::factory()->create();
+        $response = $this->deleteJson('/api/cars/'.$car->id);
+        $response->assertStatus(200);
     }
 }

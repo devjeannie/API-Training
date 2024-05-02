@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateCarRequest;
 use App\Http\Requests\UpdateCarRequest;
+use App\Models\Car;
 use App\Services\CarService;
 
 class CarController extends Controller
@@ -25,17 +26,17 @@ class CarController extends Controller
         $this->carService->createCar($request->data());
     }
 
-    public function show($id)
+    public function show(Car $id)
     {
         $this->carService->getCarById($id);
     }
 
-    public function update(UpdateCarRequest $request, $car)
+    public function update(UpdateCarRequest $request, Car $car)
     {
         $this->carService->updateCar($car, $request->data());
     }
 
-    public function destroy($id)
+    public function destroy(Car $id)
     {
         $this->carService->deleteCar($id);
     }
