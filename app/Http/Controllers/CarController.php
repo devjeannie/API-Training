@@ -13,7 +13,7 @@ class CarController extends Controller
 
     public function __construct(CarService $carService)
     {
-        $this->carService = $carService;
+        return $this->carService = $carService;
     }
 
     public function index()
@@ -23,21 +23,21 @@ class CarController extends Controller
 
     public function store(CreateCarRequest $request)
     {
-        $this->carService->createCar($request->data());
+        return $this->carService->createCar($request->data());
     }
 
     public function show(Car $id)
     {
-        $this->carService->getCarById($id);
+        return $this->carService->getCarById($id);
     }
 
     public function update(UpdateCarRequest $request, Car $car)
     {
-        $this->carService->updateCar($car, $request->data());
+        return $this->carService->updateCar($car, $request->data());
     }
 
     public function destroy(Car $id)
     {
-        $this->carService->deleteCar($id);
+        return $this->carService->deleteCar($id);
     }
 }
