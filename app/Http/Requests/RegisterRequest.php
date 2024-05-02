@@ -24,6 +24,7 @@ class RegisterRequest extends BaseRequest
         return [
             'name' => ['required', 'string'],
             'username' => ['required', 'string','unique:users'],
+            'email' => ['required', 'string','unique:users'],
             'password' => ['required', 'string', 'min:8'],
         ];
     }
@@ -34,7 +35,7 @@ class RegisterRequest extends BaseRequest
     */
     public function data(): array
     {
-        $data = $this->only('name', 'username');
+        $data = $this->only('name', 'username', 'email');
 
         if (! is_null($this->input('password'))) {
             $data['password'] = bcrypt($this->password);
