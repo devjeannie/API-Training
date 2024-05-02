@@ -18,7 +18,7 @@ class CarController extends Controller
 
     public function index()
     {
-        $this->carService->getCarsOwnedByUser();
+        return $this->carService->getCarsOwnedByUser(auth()->user()->cars);
     }
 
     public function store(CreateCarRequest $request)

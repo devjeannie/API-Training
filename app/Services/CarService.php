@@ -17,9 +17,8 @@ class CarService
         return CarResource::collection(Car::all());  
     }
 
-    public function getCarsOwnedByUser(): ResourceCollection
+    public function getCarsOwnedByUser($cars): ResourceCollection
     {
-        $cars = auth()->guard('api')->user()->cars()->get();
         return CarResource::collection($cars);  
     }
 
